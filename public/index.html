@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Pizzateig</title>
+  <meta name="description" content="Pizzateig-Rechner für Napoletana und Romana in Teglia." />
+  <meta name="theme-color" content="#F6EFE6" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#14110F" media="(prefers-color-scheme: dark)" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+  <meta name="apple-mobile-web-app-title" content="Pizzateig" />
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
+  <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Kompakte Leiste, erscheint beim Scrollen -->
+  <div class="minibar" id="minibar" aria-hidden="true">
+    <div class="minibar-inner" id="minibarItems"></div>
+  </div>
+
+  <main class="app">
+    <header class="top">
+      <div>
+        <p class="eyebrow" id="eyebrow">Pizza Napoletana</p>
+        <h1>Pizzateig</h1>
+      </div>
+      <button class="icon-btn" id="shareBtn" aria-label="Rezept teilen">
+        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </button>
+    </header>
+
+    <div class="segmented big" role="tablist" data-key="type">
+      <button role="tab" data-value="1">
+        <span class="seg-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="9" cy="10" r="1.4" fill="currentColor"/><circle cx="14.5" cy="9" r="1.2" fill="currentColor"/><circle cx="13" cy="14.5" r="1.4" fill="currentColor"/></svg>
+        </span>Napoletana
+      </button>
+      <button role="tab" data-value="2">
+        <span class="seg-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" width="18" height="18"><rect x="3" y="6" width="18" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="2"/><circle cx="8" cy="11" r="1.3" fill="currentColor"/><circle cx="13" cy="13.5" r="1.3" fill="currentColor"/><circle cx="16.5" cy="10" r="1.2" fill="currentColor"/></svg>
+        </span>Romana
+      </button>
+    </div>
+
+    <!-- Ergebnis -->
+    <section class="result" id="result" aria-live="polite">
+      <p class="result-sub" id="resultSub">1 Pizza à 280 g</p>
+      <div class="hero">
+        <span class="hero-label">Mehl</span>
+        <span class="hero-value"><span id="vMehl">0</span><small>g</small></span>
+      </div>
+      <ul class="ingredients" id="ingredients">
+        <li data-ing="wasser"><span class="ing-name">Wasser</span><span class="ing-val"><b id="vWasser">0</b> g</span></li>
+        <li data-ing="salz"><span class="ing-name">Salz</span><span class="ing-val"><b id="vSalz">0</b> g</span></li>
+        <li data-ing="hefe"><span class="ing-name" id="hefeName">Frische Hefe</span><span class="ing-val"><b id="vHefe">0</b> g</span></li>
+        <li data-ing="oel" id="oelRow"><span class="ing-name">Olivenöl</span><span class="ing-val"><b id="vOel">0</b> g</span></li>
+      </ul>
+      <div class="result-foot">
+        <span id="footHyd">Hydratation 65 %</span>
+        <span>Tippen zum Abhaken</span>
+      </div>
+    </section>
+
+    <!-- Napoletana -->
+    <section class="group" id="groupNap">
+      <h2>Pizzen</h2>
+      <div class="card">
+        <div class="row">
+          <div class="row-label">Anzahl</div>
+          <div class="stepper" data-key="count" data-min="1" data-max="99" data-step="1">
+            <button class="step" data-dir="-1" aria-label="Weniger">−</button>
+            <input class="step-val" inputmode="numeric" aria-label="Anzahl Pizzen" />
+            <button class="step" data-dir="1" aria-label="Mehr">+</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="row-label">Teigkugel<span class="row-hint" id="weightHint">ca. 32 cm Pizza</span></div>
+          <div class="stepper" data-key="weight" data-min="100" data-max="1000" data-step="10" data-unit="g">
+            <button class="step" data-dir="-1" aria-label="Leichter">−</button>
+            <input class="step-val" inputmode="numeric" aria-label="Gewicht der Teigkugel in Gramm" />
+            <button class="step" data-dir="1" aria-label="Schwerer">+</button>
+          </div>
+        </div>
+        <div class="chips" data-key="weight">
+          <button data-value="230">230 g</button>
+          <button data-value="250">250 g</button>
+          <button data-value="280">280 g</button>
+          <button data-value="300">300 g</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Romana -->
+    <section class="group" id="groupRom" hidden>
+      <h2>Backblech</h2>
+      <div class="card">
+        <div class="row">
+          <div class="row-label">Breite</div>
+          <div class="stepper" data-key="width" data-min="1" data-max="200" data-step="1" data-unit="cm">
+            <button class="step" data-dir="-1" aria-label="Schmaler">−</button>
+            <input class="step-val" inputmode="numeric" aria-label="Breite des Backblechs in cm" />
+            <button class="step" data-dir="1" aria-label="Breiter">+</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row">
+          <div class="row-label">Länge</div>
+          <div class="stepper" data-key="length" data-min="1" data-max="200" data-step="1" data-unit="cm">
+            <button class="step" data-dir="-1" aria-label="Kürzer">−</button>
+            <input class="step-val" inputmode="numeric" aria-label="Länge des Backblechs in cm" />
+            <button class="step" data-dir="1" aria-label="Länger">+</button>
+          </div>
+        </div>
+        <div class="tray-preview" aria-hidden="true"><div id="trayRect"><span id="trayLabel">20 × 40 cm</span></div></div>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Teig</h2>
+      <div class="card">
+        <div class="row">
+          <div class="row-label">Hydratation<span class="row-hint" id="hydHint">Empfohlen: 65 %</span></div>
+          <div class="pill-val"><span id="hydVal">65</span> %</div>
+        </div>
+        <input type="range" class="slider" id="hydSlider" min="50" max="100" step="1" aria-label="Hydratation in Prozent" />
+        <div class="slider-scale"><span>50 %</span><span>trocken · fest</span><span>nass · luftig</span><span>100 %</span></div>
+        <div class="divider"></div>
+        <div class="row stack">
+          <div class="row-label">Ofen</div>
+          <div class="segmented" data-key="oven">
+            <button data-value="1">Pizzaofen <em>450°</em></button>
+            <button data-value="2">Backofen <em>250°</em></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="group">
+      <h2>Hefe &amp; Gare</h2>
+      <div class="card">
+        <div class="row stack">
+          <div class="row-label">Hefe</div>
+          <div class="segmented" data-key="yeast">
+            <button data-value="0.002">Frisch</button>
+            <button data-value="0.001">Trocken</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row stack">
+          <div class="row-label">Kühlschrank</div>
+          <div class="segmented" data-key="fridge">
+            <button data-value="24">24 Stunden</button>
+            <button data-value="99">Ohne</button>
+          </div>
+        </div>
+        <div class="divider"></div>
+        <div class="row stack">
+          <div class="row-label">Zimmertemperatur</div>
+          <div class="segmented" data-key="room">
+            <button data-value="6">6 Stunden</button>
+            <button data-value="2">2 Stunden</button>
+          </div>
+        </div>
+        <div class="timeline" id="timeline"></div>
+      </div>
+    </section>
+
+    <section class="tip" id="tip"></section>
+
+    <button class="reset" id="resetBtn">Auf Standard zurücksetzen</button>
+    <p class="credit">Berechnung nach dem Pizzateig-Rechner von Pizza Pasta Bros.</p>
+  </main>
+
+  <div class="toast" id="toast" role="status"></div>
+
+  <script src="calc.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
