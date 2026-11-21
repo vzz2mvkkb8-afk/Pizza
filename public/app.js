@@ -172,25 +172,17 @@
 
     $('#groupNap').hidden = !napoli;
     $('#groupRom').hidden = napoli;
-    $('#eyebrow').textContent = napoli ? 'Pizza Napoletana' : 'Pizza Romana in Teglia';
 
     var hyd = r.hydratation;
     slider.value = hyd;
     slider.style.setProperty('--p', ((hyd - 50) / 50 * 100) + '%');
     $('#hydVal').textContent = hyd;
-    $('#hydHint').textContent = 'Empfohlen: ' + (napoli ? 65 : 80) + ' %';
+    $('#hydHint').textContent = 'Empfohlen ' + (napoli ? 65 : 80) + ' %';
 
     // Durchmesser-Schätzung (280 g ≈ 32 cm laut Original)
     var d = Math.round(32 * Math.sqrt(state.weight / 280));
-    $('#weightHint').textContent = 'ergibt ca. ' + d + ' cm Pizza';
+    $('#weightHint').textContent = 'ca. ' + d + ' cm Durchmesser';
 
-    // Blech-Vorschau
-    var maxW = 200, maxH = 100, ratio = state.length / state.width;
-    var w = maxW, h = maxW / ratio;
-    if (h > maxH) { h = maxH; w = maxH * ratio; }
-    $('#trayRect').style.width = Math.max(56, w) + 'px';
-    $('#trayRect').style.height = Math.max(28, h) + 'px';
-    $('#trayLabel').textContent = state.width + ' × ' + state.length + ' cm';
 
     // Ergebnis
     $('#resultSub').textContent = subtitle();
@@ -201,8 +193,6 @@
     $('#hefeName').textContent = state.yeast === 0.002 ? 'Frische Hefe' : 'Trockenhefe';
     $('#oelRow').hidden = r.oel === null;
     if (r.oel !== null) setVal('vOel', de(r.oel));
-    $('.ingredients').style.gridTemplateColumns = r.oel === null ? '1fr 1fr 1fr' : '1fr 1fr';
-    $('#footHyd').textContent = 'Hydratation ' + hyd + ' %';
 
     // Minibar
     var mb = [['Mehl', r.mehl + ' g', true], ['Wasser', r.wasser + ' g'], ['Salz', de(r.salz) + ' g'], ['Hefe', de(r.hefe) + ' g']];
@@ -211,19 +201,11 @@
       return '<div class="mb-item' + (m[2] ? ' main' : '') + '"><span>' + m[0] + '</span><b>' + m[1] + '</b></div>';
     }).join('');
 
-    // Gare-Zeitleiste
-    var tl = '';
-    if (state.fridge === 24) tl += '<div class="tl-seg tl-cold" style="flex:3"><span>Kühlschrank</span><b>24 h</b></div>';
-    tl += '<div class="tl-seg tl-warm" style="flex:' + (state.room === 6 ? 2 : 1.3) + '"><span>Zimmertemp.</span><b>' + state.room + ' h</b></div>';
-    tl += '<div class="tl-seg tl-total"><span>Gesamt</span><b>' + ((state.fridge === 24 ? 24 : 0) + state.room) + ' h</b></div>';
-    $('#timeline').innerHTML = tl;
+    $('#gareNote').textContent = '· ' + ((state.fridge === 24 ? 24 : 0) + state.room) + ' h gesamt';
 
-    // Tipp
-    $('#tip').innerHTML = '<span class="tip-icon" aria-hidden="true"><svg viewBox="0 0 24 24" width="16" height="16"><path d="M9 18h6M10 21h4M12 3a6 6 0 0 0-3.5 10.9c.6.5 1 1.2 1 2V16h5v-.1c0-.8.4-1.5 1-2A6 6 0 0 0 12 3Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span><div>' +
-      (napoli
-        ? '<strong>Tipp:</strong> Mit 280 g pro Teigkugel formst du eine Pizza von ca. 32 cm Durchmesser. Für die Napoletana empfehlen wir 65 % Hydratation.'
-        : '<strong>Tipp:</strong> Trag einfach die Grösse deines Backblechs ein, der Rest wird berechnet. Für die Romana empfehlen wir 80 % Hydratation.') +
-      '</div>';
+    $('#tip').textContent = napoli
+      ? 'Mit 280 g pro Teigkugel formst du eine Pizza von ca. 32 cm. Tippe eine Zutat an, um sie abzuhaken.'
+      : 'Gib die Grösse deines Backblechs ein, der Rest wird berechnet. Tippe eine Zutat an, um sie abzuhaken.';
 
     save();
   }
