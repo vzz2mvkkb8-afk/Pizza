@@ -105,7 +105,7 @@
       subtitle(),
       '',
       'Mehl: ' + r.mehl + ' g',
-      'Sprudel: ' + r.wasser + ' g',
+      'Sprudel: ' + r.wasser + ' ml',
       'Salz: ' + de(r.salz) + ' g',
       (state.yeast === 0.002 ? 'Frische Hefe' : 'Trockenhefe') + ': ' + de(r.hefe) + ' g',
     ];
@@ -195,7 +195,7 @@
     if (r.oel !== null) setVal('vOel', de(r.oel));
 
     // Minibar
-    var mb = [['Mehl', r.mehl + ' g', true], ['Sprudel', r.wasser + ' g'], ['Salz', de(r.salz) + ' g'], ['Hefe', de(r.hefe) + ' g']];
+    var mb = [['Mehl', r.mehl + ' g', true], ['Sprudel', r.wasser + ' ml'], ['Salz', de(r.salz) + ' g'], ['Hefe', de(r.hefe) + ' g']];
     if (r.oel !== null) mb.push(['Öl', de(r.oel) + ' g']);
     $('#minibarItems').innerHTML = mb.map(function (m) {
       return '<div class="mb-item' + (m[2] ? ' main' : '') + '"><span>' + m[0] + '</span><b>' + m[1] + '</b></div>';
@@ -211,12 +211,19 @@
   }
 
   // Minibar ein-/ausblenden
-  if ('IntersectionObserver' in window) {
-    new IntersectionObserver(function (entries) {
-      var show = !entries[0].isIntersecting && entries[0].boundingClientRect.top < 0;
+  // Sobald die grosse Mehl-Zahl aus dem Bild scrollt, stehen alle Angaben oben nebeneinander
+  var mbShown = false;
+  function checkMinibar() {
+    var show = $('.hero').getBoundingClientRect().bottom < 60;
+    if (show !== mbShown) {
+      mbShown = show;
       $('#minibar').classList.toggle('show', show);
-    }, { threshold: 0 }).observe($('#result'));
+      $('#minibar').setAttribute('aria-hidden', String(!show));
+    }
   }
+  window.addEventListener('scroll', checkMinibar, { passive: true });
+  window.addEventListener('resize', checkMinibar);
+  checkMinibar();
 
   render();
 
