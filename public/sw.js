@@ -1,4 +1,4 @@
-const CACHE = 'pizzateig-v2';
+const CACHE = 'pizzateig-v3';
 const ASSETS = ['./', 'index.html', 'styles.css', 'app.js', 'calc.js', 'manifest.webmanifest', 'icons/icon.svg', 'icons/apple-touch-icon.png'];
 self.addEventListener('install', (e) => { e.waitUntil(caches.open(CACHE).then((c) => c.addAll(ASSETS))); self.skipWaiting(); });
 self.addEventListener('activate', (e) => {

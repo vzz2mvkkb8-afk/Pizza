@@ -105,7 +105,7 @@
       subtitle(),
       '',
       'Mehl: ' + r.mehl + ' g',
-      'Wasser: ' + r.wasser + ' g',
+      'Sprudel: ' + r.wasser + ' g',
       'Salz: ' + de(r.salz) + ' g',
       (state.yeast === 0.002 ? 'Frische Hefe' : 'Trockenhefe') + ': ' + de(r.hefe) + ' g',
     ];
@@ -195,7 +195,7 @@
     if (r.oel !== null) setVal('vOel', de(r.oel));
 
     // Minibar
-    var mb = [['Mehl', r.mehl + ' g', true], ['Wasser', r.wasser + ' g'], ['Salz', de(r.salz) + ' g'], ['Hefe', de(r.hefe) + ' g']];
+    var mb = [['Mehl', r.mehl + ' g', true], ['Sprudel', r.wasser + ' g'], ['Salz', de(r.salz) + ' g'], ['Hefe', de(r.hefe) + ' g']];
     if (r.oel !== null) mb.push(['Öl', de(r.oel) + ' g']);
     $('#minibarItems').innerHTML = mb.map(function (m) {
       return '<div class="mb-item' + (m[2] ? ' main' : '') + '"><span>' + m[0] + '</span><b>' + m[1] + '</b></div>';
