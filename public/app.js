@@ -204,17 +204,19 @@
     $('#gareNote').textContent = '· ' + ((state.fridge === 24 ? 24 : 0) + state.room) + ' h gesamt';
 
     $('#tip').textContent = napoli
-      ? 'Mit 280 g pro Teigkugel formst du eine Pizza von ca. 32 cm. Tippe eine Zutat an, um sie abzuhaken.'
-      : 'Gib die Grösse deines Backblechs ein, der Rest wird berechnet. Tippe eine Zutat an, um sie abzuhaken.';
+      ? 'Mit 280 g pro Teigkugel formst du eine Pizza von ca. 32 cm. Tippe oben eine Zutat an, um sie abzuhaken.'
+      : 'Gib die Grösse deines Backblechs ein, der Rest wird berechnet. Tippe oben eine Zutat an, um sie abzuhaken.';
 
     save();
   }
 
   // Minibar ein-/ausblenden
-  // Sobald die grosse Mehl-Zahl aus dem Bild scrollt, stehen alle Angaben oben nebeneinander
+  // Mengenleiste oben: sichtbar, sobald man scrollt und die Zutaten-Karte nicht im Bild ist
   var mbShown = false;
   function checkMinibar() {
-    var show = $('.hero').getBoundingClientRect().bottom < 60;
+    var r = $('#result').getBoundingClientRect();
+    var resultVisible = r.top < window.innerHeight - 80 && r.bottom > 80;
+    var show = window.scrollY > 40 && !resultVisible;
     if (show !== mbShown) {
       mbShown = show;
       $('#minibar').classList.toggle('show', show);
@@ -224,6 +226,29 @@
   window.addEventListener('scroll', checkMinibar, { passive: true });
   window.addEventListener('resize', checkMinibar);
   checkMinibar();
+  $('#minibar').addEventListener('click', function () {
+    $('#resultGroup').scrollIntoView({ behavior: 'smooth', block: 'start' });
+  });
+
+  // Hell / Dunkel
+  var THEME = 'pizzateig.theme';
+  var mq = window.matchMedia('(prefers-color-scheme: dark)');
+  function currentTheme() {
+    return document.documentElement.getAttribute('data-theme') || (mq.matches ? 'dark' : 'light');
+  }
+  function paintThemeColor() {
+    var dark = currentTheme() === 'dark';
+    $$('meta[name="theme-color"]').forEach(function (m) { m.setAttribute('content', dark ? '#000000' : '#EDEDEA'); m.setAttribute('media', 'all'); });
+    $('#themeBtn').setAttribute('aria-label', dark ? 'Hellmodus einschalten' : 'Dunkelmodus einschalten');
+  }
+  $('#themeBtn').addEventListener('click', function () {
+    var next = currentTheme() === 'dark' ? 'light' : 'dark';
+    document.documentElement.setAttribute('data-theme', next);
+    try { localStorage.setItem(THEME, next); } catch (e) {}
+    haptic(); paintThemeColor();
+  });
+  if (mq.addEventListener) mq.addEventListener('change', paintThemeColor);
+  paintThemeColor();
 
   render();
 

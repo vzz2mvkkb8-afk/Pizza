@@ -15,45 +15,43 @@
   <link rel="icon" href="icons/icon.svg" type="image/svg+xml" />
   <link rel="apple-touch-icon" href="icons/apple-touch-icon.png" />
   <link rel="stylesheet" href="styles.css" />
+  <script>
+    try { var t = localStorage.getItem('pizzateig.theme'); if (t === 'light' || t === 'dark') document.documentElement.setAttribute('data-theme', t); } catch (e) {}
+  </script>
 </head>
 <body>
   <!-- Kompakte Leiste, erscheint beim Scrollen -->
-  <div class="minibar" id="minibar" aria-hidden="true">
+  <div class="minibar" id="minibar" aria-hidden="true" title="Zu den Zutaten">
     <div class="minibar-inner" id="minibarItems"></div>
   </div>
 
   <main class="app">
     <header class="top">
       <h1>Pizzateig</h1>
+      <div class="top-actions">
+      <button class="icon-btn" id="themeBtn" aria-label="Hell- oder Dunkelmodus">
+        <svg class="i-moon" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M20 14.5A8 8 0 0 1 9.5 4a8 8 0 1 0 10.5 10.5Z" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/></svg>
+        <svg class="i-sun" viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="1.9"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg>
+      </button>
       <button class="icon-btn" id="shareBtn" aria-label="Rezept teilen">
         <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true"><path d="M12 3v12M7.5 7.5 12 3l4.5 4.5M5 12v6.5A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V12" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg>
       </button>
+      </div>
     </header>
 
+    <section class="group first">
+      <h2><span class="num">1</span>Welche Pizza?</h2>
     <div class="segmented big" role="tablist" data-key="type">
       <button role="tab" data-value="1">Napoletana
       </button>
       <button role="tab" data-value="2">Romana
       </button>
     </div>
-
-    <!-- Ergebnis -->
-    <section class="result" id="result" aria-live="polite">
-      <div class="hero">
-        <span class="result-sub" id="resultSub">1 Pizza à 280 g</span>
-        <span class="hero-value"><span id="vMehl">0</span><small>g Mehl</small></span>
-      </div>
-      <ul class="ingredients" id="ingredients">
-        <li data-ing="wasser"><span class="ing-name">Sprudel</span><span class="ing-val"><b id="vWasser">0</b> ml</span></li>
-        <li data-ing="salz"><span class="ing-name">Salz</span><span class="ing-val"><b id="vSalz">0</b> g</span></li>
-        <li data-ing="hefe"><span class="ing-name" id="hefeName">Frische Hefe</span><span class="ing-val"><b id="vHefe">0</b> g</span></li>
-        <li data-ing="oel" id="oelRow"><span class="ing-name">Olivenöl</span><span class="ing-val"><b id="vOel">0</b> g</span></li>
-      </ul>
     </section>
 
     <!-- Napoletana -->
     <section class="group" id="groupNap">
-      <h2>Pizzen</h2>
+      <h2><span class="num">2</span>Wie viele Pizzen?</h2>
       <div class="card">
         <div class="row">
           <div class="row-label">Anzahl</div>
@@ -77,7 +75,7 @@
 
     <!-- Romana -->
     <section class="group" id="groupRom" hidden>
-      <h2>Backblech</h2>
+      <h2><span class="num">2</span>Wie gross ist dein Blech?</h2>
       <div class="card">
         <div class="row">
           <div class="row-label">Breite</div>
@@ -100,26 +98,7 @@
     </section>
 
     <section class="group">
-      <h2>Teig</h2>
-      <div class="card">
-        <div class="row">
-          <div class="row-label">Hydratation<span class="row-hint" id="hydHint">Empfohlen: 65 %</span></div>
-          <div class="pill-val"><span id="hydVal">65</span> %</div>
-        </div>
-        <input type="range" class="slider" id="hydSlider" min="50" max="100" step="1" aria-label="Hydratation in Prozent" />
-        <div class="divider"></div>
-        <div class="row stack">
-          <div class="row-label">Ofen</div>
-          <div class="segmented" data-key="oven">
-            <button data-value="1">Pizzaofen <em>450°</em></button>
-            <button data-value="2">Backofen <em>250°</em></button>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="group">
-      <h2>Hefe &amp; Gare <span id="gareNote"></span></h2>
+      <h2><span class="num">3</span>Hefe &amp; Gare <span class="h2-note" id="gareNote"></span></h2>
       <div class="card">
         <div class="row stack">
           <div class="row-label">Hefe</div>
@@ -145,6 +124,42 @@
           </div>
         </div>
       </div>
+    </section>
+
+    <section class="group">
+      <h2><span class="num">4</span>Teig &amp; Ofen</h2>
+      <div class="card">
+        <div class="row">
+          <div class="row-label">Hydratation<span class="row-hint" id="hydHint">Empfohlen: 65 %</span></div>
+          <div class="pill-val"><span id="hydVal">65</span> %</div>
+        </div>
+        <input type="range" class="slider" id="hydSlider" min="50" max="100" step="1" aria-label="Hydratation in Prozent" />
+        <div class="divider"></div>
+        <div class="row stack">
+          <div class="row-label">Ofen</div>
+          <div class="segmented" data-key="oven">
+            <button data-value="1">Pizzaofen <em>450°</em></button>
+            <button data-value="2">Backofen <em>250°</em></button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Ergebnis -->
+    <section class="group" id="resultGroup">
+      <h2><span class="num">5</span>Deine Zutaten</h2>
+    <section class="result" id="result" aria-live="polite">
+      <div class="hero">
+        <span class="result-sub" id="resultSub">1 Pizza à 280 g</span>
+        <span class="hero-value"><span id="vMehl">0</span><small>g Mehl</small></span>
+      </div>
+      <ul class="ingredients" id="ingredients">
+        <li data-ing="wasser"><span class="ing-name">Sprudel</span><span class="ing-val"><b id="vWasser">0</b> ml</span></li>
+        <li data-ing="salz"><span class="ing-name">Salz</span><span class="ing-val"><b id="vSalz">0</b> g</span></li>
+        <li data-ing="hefe"><span class="ing-name" id="hefeName">Frische Hefe</span><span class="ing-val"><b id="vHefe">0</b> g</span></li>
+        <li data-ing="oel" id="oelRow"><span class="ing-name">Olivenöl</span><span class="ing-val"><b id="vOel">0</b> g</span></li>
+      </ul>
+    </section>
     </section>
 
     <p class="tip" id="tip"></p>
